@@ -113,6 +113,8 @@ class TaxProfile(UUIDPKMixin, TimestampMixin, Base):
     business_description: Mapped[str | None] = mapped_column(String(200))
     business_code: Mapped[str | None] = mapped_column(String(6))  # NAICS principal business code
     is_cash_intensive: Mapped[bool] = mapped_column(Boolean, default=False)
+    # Specified service trade or business (consulting, health, law...) — affects QBI.
+    is_sstb: Mapped[bool] = mapped_column(Boolean, default=False)
 
     # Household
     age_65_or_older: Mapped[bool] = mapped_column(Boolean, default=False)

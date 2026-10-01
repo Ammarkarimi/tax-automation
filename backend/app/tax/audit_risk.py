@@ -39,12 +39,15 @@ def assess_audit_risk(ctx: AnalysisContext) -> dict[str, Any]:
     factors: list[RiskFactor] = []
 
     # 1. Information-return mismatch (the #1 automated trigger: IRS CP2000 matching)
+    if ctx.recorded_receipts is not None:
+        receipts = ctx.recorded_receipts
     if ctx.reported_1099_income > 0 and receipts + D(1) < ctx.reported_1099_income:
         gap = ctx.reported_1099_income - receipts
         factors.append(RiskFactor(
             "1099-mismatch", "Income lower than your 1099s", "high", 35,
-            f"Your 1099 forms total ${ctx.reported_1099_income:,.0f} but gross receipts are "
-            f"${receipts:,.0f} (gap ${gap:,.0f}). The IRS matches every 1099 automatically.",
+            f"Your 1099 forms total ${ctx.reported_1099_income:,.0f} but the income recorded from "
+            f"your transactions is ${receipts:,.0f} (gap ${gap:,.0f}). The IRS matches every 1099 "
+            "automatically.",
             "Make sure all 1099 income is recorded as business income. If a 1099 is wrong, "
             "ask the payer for a corrected form.",
         ))

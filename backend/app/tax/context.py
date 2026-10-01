@@ -19,6 +19,8 @@ class AnalysisContext:
     needs_review_count: int = 0
     round_number_expense_ratio: float = 0.0  # share of expenses that are whole $100s
     car_expense_full_business_use: bool = False
+    # Gross receipts recorded from transactions (before any 1099 floor is applied).
+    recorded_receipts: Decimal | None = None
     reported_1099_income: Decimal = Decimal("0")  # NEC + MISC + K totals from forms
     form_1099k_gross: Decimal = Decimal("0")
     is_cash_intensive: bool = False

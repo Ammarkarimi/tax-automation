@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -22,6 +22,8 @@ def get_engine() -> Engine:
         if url.startswith("sqlite"):
             kwargs["connect_args"] = {"check_same_thread": False}
         _engine = create_engine(url, **kwargs)
+        if url.startswith("sqlite"):
+            _enable_sqlite_fks(_engine)
         _SessionLocal = sessionmaker(bind=_engine, autoflush=False, expire_on_commit=False)
     return _engine
 
@@ -38,6 +40,15 @@ def get_db() -> Iterator[Session]:
         yield db
     finally:
         db.close()
+
+
+def _enable_sqlite_fks(engine: Engine) -> None:
+    # SQLite ignores ON DELETE CASCADE unless foreign keys are switched on per connection.
+    @event.listens_for(engine, "connect")
+    def _fk_pragma(dbapi_conn, _record):  # pragma: no cover - trivial
+        cur = dbapi_conn.cursor()
+        cur.execute("PRAGMA foreign_keys=ON")
+        cur.close()
 
 
 def reset_engine_for_tests(engine: Engine) -> None:
