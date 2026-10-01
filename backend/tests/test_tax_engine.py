@@ -192,3 +192,13 @@ def test_deduction_suggestions():
     ctx = _ctx(inp=TaxInput(tax_year=2025, gross_receipts=D("90000")), form_1099k_gross=D("90000"))
     ids = {s["id"] for s in find_deductions(ctx)}
     assert {"home-office", "mileage", "sep-ira", "processing-fees", "qbi"} <= ids
+
+
+def test_expense_ratio_uses_sales_not_gross_profit():
+    # Shop: 100k sales, 60k COGS, 20k expenses -> 80% of sales (not 50% of 40k gross profit)
+    inp = TaxInput(tax_year=2025, gross_receipts=D("100000"), inventory_purchases=D("60000"), expenses={"20b": D("20000")})
+    ids = [f["id"] for f in assess_audit_risk(_ctx(inp=inp, has_documents=True))["factors"]]
+    assert "expense-ratio" not in ids
+    inp.expenses = {"20b": D("30000")}  # 90% of sales
+    ids = [f["id"] for f in assess_audit_risk(_ctx(inp=inp, has_documents=True))["factors"]]
+    assert "expense-ratio" in ids

@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "TaxPilot",
+    "slug": "taxpilot",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "taxpilot",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.taxpilot.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.taxpilot.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#142b5c",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "allowBackup": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "TaxPilot needs your photos so you can upload receipts and tax forms.",
+          "cameraPermission": "TaxPilot uses the camera to scan receipts and tax forms."
+        }
+      ]
+    ]
+  }
+}

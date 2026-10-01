@@ -63,12 +63,14 @@ def assess_audit_risk(ctx: AnalysisContext) -> dict[str, Any]:
         ))
 
     # 3. High expense ratio
-    if gross > 0 and net >= 0:
-        ratio = total_exp / gross
+    net_sales = D(str(sc["line3"])) + D(str(sc["line6_other_income"]))
+    if net_sales > 0 and net >= 0:
+        # Compare expenses + COGS with sales (line 7 already has COGS subtracted).
+        ratio = total_exp / net_sales
         if ratio > D("0.85"):
             factors.append(RiskFactor(
                 "expense-ratio", "Very high expenses vs income", "medium", 12,
-                f"Expenses (incl. COGS) are {ratio:.0%} of gross income.",
+                f"Expenses (incl. cost of goods sold) are {ratio:.0%} of sales.",
                 "Double-check that personal spending isn't categorized as business.",
             ))
 
