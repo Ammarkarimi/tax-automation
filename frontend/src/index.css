@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #eef5ff;
+  --color-brand-100: #d9e8ff;
+  --color-brand-500: #2f6fed;
+  --color-brand-600: #1f57c9;
+  --color-brand-700: #1a46a0;
+  --color-brand-900: #142b5c;
+}
+
+/* Reusable component classes (Tailwind v4 custom utilities). */
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50;
+}
+@utility btn-primary {
+  @apply btn bg-brand-600 text-white hover:bg-brand-700;
+}
+@utility btn-secondary {
+  @apply btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50;
+}
+@utility btn-danger {
+  @apply btn bg-red-600 text-white hover:bg-red-700;
+}
+@utility input {
+  @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-100 focus:outline-none;
+}
+@utility label {
+  @apply mb-1 block text-sm font-medium text-slate-700;
+}
+@utility card {
+  @apply rounded-xl border border-slate-200 bg-white p-5 shadow-sm;
+}
+
+/* Markdown rendered from AI/template explanations. */
+@layer components {
+  .prose-tax h3 { @apply mt-2 mb-2 text-base font-semibold; }
+  .prose-tax p { @apply mb-2; }
+  .prose-tax ul { @apply mb-2 list-disc space-y-1 pl-5; }
+  .prose-tax ol { @apply mb-2 list-decimal space-y-1 pl-5; }
+  .prose-tax strong { @apply font-semibold; }
+}

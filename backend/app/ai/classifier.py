@@ -93,19 +93,22 @@ _COMPILED = [(re.compile(p, re.I), c, d, b, conf) for p, c, d, b, conf in _RULES
 _COMPILED_INCOME = [(re.compile(p, re.I), c, conf) for p, c, conf in _INCOME_RULES]
 
 
+def _why(match: re.Match[str], cat: Category) -> str:
+    return f'Keyword "{match.group(0).strip()}" suggests {cat.value.replace("_", " ")}'
+
+
 def classify_by_rules(t: TxnIn) -> Classification:
     desc = t.description or ""
     if t.direction == Direction.INCOME:
         for pattern, cat, conf in _COMPILED_INCOME:
-            if pattern.search(desc):
-                return Classification(t.ref, cat, Direction.INCOME, 100 if cat == Category.BUSINESS_INCOME else 0,
-                                      conf, ClassifiedBy.RULES, f"Matched rule: {pattern.pattern[:40]}")
+            if m := pattern.search(desc):
+                # Taxable income counts in full; transfers are excluded by category anyway.
+                return Classification(t.ref, cat, Direction.INCOME, 100, conf, ClassifiedBy.RULES, _why(m, cat))
         return Classification(t.ref, Category.BUSINESS_INCOME, Direction.INCOME, 100, 0.5,
                               ClassifiedBy.RULES, "Deposit assumed to be business income — please confirm")
     for pattern, cat, forced_dir, bpct, conf in _COMPILED:
-        if pattern.search(desc):
-            return Classification(t.ref, cat, forced_dir or t.direction, bpct, conf,
-                                  ClassifiedBy.RULES, f"Matched rule: {pattern.pattern[:40]}")
+        if m := pattern.search(desc):
+            return Classification(t.ref, cat, forced_dir or t.direction, bpct, conf, ClassifiedBy.RULES, _why(m, cat))
     return Classification(t.ref, Category.UNCATEGORIZED, t.direction, 100, 0.0,
                           ClassifiedBy.RULES, "No rule matched")
 
