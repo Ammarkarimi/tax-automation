@@ -53,6 +53,8 @@ def test_rules_classifier():
     assert c.category == Category.ESTIMATED_TAX_PAYMENT and not c.needs_review
     c = classify_by_rules(TxnIn(1, "SQUARE INC DEPOSIT", Decimal("100"), Direction.INCOME))
     assert c.category == Category.BUSINESS_INCOME
+    c = classify_by_rules(TxnIn(3, "RESTAURANT DEPOT PURCHASE", Decimal("3000"), Direction.EXPENSE))
+    assert c.category == Category.INVENTORY_PURCHASES
     c = classify_by_rules(TxnIn(2, "JOE'S TAILORING", Decimal("64"), Direction.EXPENSE))
     assert c.category == Category.UNCATEGORIZED and c.needs_review
 

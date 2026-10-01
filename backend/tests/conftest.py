@@ -12,7 +12,8 @@ _tmp = tempfile.mkdtemp(prefix="taxpilot-test-")
 os.environ.update(
     {
         "ENVIRONMENT": "test",
-        "DATABASE_URL": f"sqlite:///{_tmp}/test.db",
+        # Set TEST_DATABASE_URL to run the suite against PostgreSQL instead of SQLite.
+        "DATABASE_URL": os.environ.get("TEST_DATABASE_URL", f"sqlite:///{_tmp}/test.db"),
         "JWT_SECRET": secrets.token_urlsafe(48),
         "HMAC_SECRET": secrets.token_urlsafe(48),
         "DATA_ENCRYPTION_KEY": base64.urlsafe_b64encode(secrets.token_bytes(32)).decode(),

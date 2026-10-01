@@ -56,6 +56,8 @@ _RULES: list[tuple[str, Category, Direction | None, int, float]] = [
     (r"\b(stripe|square|paypal|shopify|etsy)\b.*\bfees?\b", Category.COMMISSIONS_FEES, Direction.EXPENSE, 100, 0.93),
     (r"\b(credit card payment|card payment|autopay|online transfer|transfer to|transfer from|xfer)\b", Category.TRANSFER, None, 0, 0.85),
     (r"\b(loan proceeds|sba loan)\b", Category.LOAN, None, 0, 0.85),
+    # Wholesale suppliers come before meals/travel so "Restaurant Depot" isn't a meal.
+    (r"\b(sam'?s club|costco business|restaurant depot|wholesale|distributor|supplier|mckesson|sysco|faire)\b", Category.INVENTORY_PURCHASES, Direction.EXPENSE, 100, 0.7),
     (r"\b(monthly service fee|overdraft|wire fee|maintenance fee)\b", Category.BANK_FEES, Direction.EXPENSE, 100, 0.9),
     (r"\b(interest paid|interest earned|int earned)\b", Category.INTEREST_INCOME, Direction.INCOME, 100, 0.85),
     (r"\b(google ads|facebook ads|fb ads|meta ads|meta platforms|yelp ads|linkedin ads|vistaprint)\b", Category.ADVERTISING, Direction.EXPENSE, 100, 0.9),
@@ -69,7 +71,6 @@ _RULES: list[tuple[str, Category, Direction | None, int, float]] = [
     (r"\b(rent|lease)\b", Category.RENT_PROPERTY, Direction.EXPENSE, 100, 0.65),
     (r"\b(blue cross|bcbs|aetna|kaiser|cigna|humana|united ?healthcare|healthcare\.gov|covered california)\b", Category.HEALTH_INSURANCE, Direction.EXPENSE, 100, 0.85),
     (r"\b(insurance|geico|progressive|state farm|allstate|next insurance|hiscox)\b", Category.INSURANCE, Direction.EXPENSE, 100, 0.65),
-    (r"\b(sam'?s club|costco business|restaurant depot|wholesale|distributor|supplier|mckesson|sysco|faire)\b", Category.INVENTORY_PURCHASES, Direction.EXPENSE, 100, 0.7),
     (r"\b(home depot|lowe'?s|hardware|repair)\b", Category.REPAIRS, Direction.EXPENSE, 100, 0.55),
     (r"\b(udemy|coursera|skillshare|masterclass|seminar|workshop)\b", Category.EDUCATION, Direction.EXPENSE, 100, 0.75),
     (r"\b(upwork|fiverr|freelancer\.com)\b.*\b(fee|service)\b", Category.COMMISSIONS_FEES, Direction.EXPENSE, 100, 0.85),

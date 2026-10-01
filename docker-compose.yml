@@ -1,0 +1,27 @@
+# Local development services only (PostgreSQL + Mailpit for OTP emails).
+# Not a deployment manifest.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: taxpilot
+      POSTGRES_PASSWORD: taxpilot   # local-only credential; change if you expose the port
+      POSTGRES_DB: taxpilot
+    ports:
+      - "127.0.0.1:5432:5432"       # bound to localhost only
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docs/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taxpilot"]
+      interval: 5s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "127.0.0.1:1025:1025"   # SMTP
+      - "127.0.0.1:8025:8025"   # Web UI: http://localhost:8025
+
+volumes:
+  pgdata:
